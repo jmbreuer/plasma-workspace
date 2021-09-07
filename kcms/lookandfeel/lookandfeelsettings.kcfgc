@@ -1,5 +1,6 @@
 File=lookandfeelsettings.kcfg
 ClassName=LookAndFeelSettings
+Inherits=KCoreConfigSkeleton
 Mutators=true
 DefaultValueGetters=true
 GenerateProperties=true
