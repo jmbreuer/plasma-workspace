@@ -77,10 +77,8 @@ Kirigami.Page {
                         onClicked: kcm.gtkPage.showGtkPreview()
                         visible: kcm.gtkPage.gtkPreviewAvailable()
                     }
-
                 }
             }
-
         }
 
         Item {
@@ -137,7 +135,6 @@ Kirigami.Page {
                         kcm.load();
                     }
                 }
-
             }
         }
     }
