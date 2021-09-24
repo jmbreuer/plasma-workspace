@@ -65,15 +65,17 @@ Q_DECL_EXPORT void kcminit_style()
 }
 }
 
+static const char *uri = "org.kde.private.kcms.style";
+
 KCMStyle::KCMStyle(QObject *parent, const QVariantList &args)
     : KQuickAddons::ManagedConfigModule(parent, args)
     , m_data(new StyleData(this))
     , m_model(new StylesModel(this))
 {
-    qmlRegisterUncreatableType<KCMStyle>("org.kde.private.kcms.style", 1, 0, "KCM", QStringLiteral("Cannot create instances of KCM"));
-    qmlRegisterType<StyleSettings>();
-    qmlRegisterType<StylesModel>();
-    qmlRegisterType<PreviewItem>("org.kde.private.kcms.style", 1, 0, "PreviewItem");
+    qmlRegisterUncreatableType<KCMStyle>(uri, 1, 0, "KCM", QStringLiteral("Cannot create instances of KCM"));
+    qmlRegisterAnonymousType<StyleSettings>(uri, 1);
+    qmlRegisterAnonymousType<StylesModel>(uri, 1);
+    qmlRegisterType<PreviewItem>(uri, 1, 0, "PreviewItem");
 
     KAboutData *about = new KAboutData(QStringLiteral("kcm_style"),
                                        i18n("Application Style"),
