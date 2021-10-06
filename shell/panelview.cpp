@@ -1287,6 +1287,9 @@ void PanelView::refreshStatus(Plasma::Types::ItemStatus status)
     } else if (status == Plasma::Types::AcceptingInputStatus) {
         setFlags(flags() & ~Qt::WindowDoesNotAcceptFocus);
         KWindowSystem::forceActiveWindow(winId());
+        if (m_shellSurface) {
+            m_shellSurface->setPanelTakesFocus(true);
+        }
     } else {
         restoreAutoHide();
         setFlags(flags() | Qt::WindowDoesNotAcceptFocus);
