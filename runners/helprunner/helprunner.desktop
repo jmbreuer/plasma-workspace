@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Help Runner
+Comment=Shows help information about runners when typing "?" or "help"
+Icon=help-contextual
+
+X-KDE-ServiceTypes=Plasma/Runner
+Type=Service
+X-KDE-PluginInfo-Author=Alexander Lohnau
+X-KDE-PluginInfo-Email=alexander.lohnau@gmx.de
+X-KDE-PluginInfo-EnabledByDefault=true
