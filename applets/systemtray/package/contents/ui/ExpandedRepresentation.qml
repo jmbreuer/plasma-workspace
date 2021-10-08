@@ -12,7 +12,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 // We still need PC2 here for that version of Menu, as PC2 Menu is still very problematic with QActions
 // Not being a proper popup window, makes it a showstopper to be used in Plasma
 import org.kde.plasma.components 2.0 as PC2
-import org.kde.plasma.components 3.0 as PlasmaComponents
+import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 Item {
@@ -59,7 +59,7 @@ Item {
         RowLayout {
             id: trayHeading
 
-            PlasmaComponents.ToolButton {
+            PC3.ToolButton {
                 id: backButton
                 visible: systemTrayState.activeApplet && systemTrayState.activeApplet.expanded && (hiddenLayout.itemCount > 0)
                 icon.name: LayoutMirroring.enabled ? "go-previous-symbolic-rtl" : "go-previous-symbolic"
@@ -74,7 +74,7 @@ Item {
                 text: systemTrayState.activeApplet ? systemTrayState.activeApplet.title : i18n("Status and Notifications")
             }
 
-            PlasmaComponents.ToolButton {
+            PC3.ToolButton {
                 id: actionsButton
                 visible: visibleActions > 0
                 checked: visibleActions > 1 ? configMenu.status !== PC2.DialogStatus.Closed : singleAction && singleAction.checked
@@ -109,9 +109,11 @@ Item {
                         singleAction.trigger();
                     }
                 }
-                PlasmaComponents.ToolTip {
-                    text: actionsButton.singleAction ? actionsButton.singleAction.text : i18n("More actions")
-                }
+
+                PC3.ToolTip.text: actionsButton.singleAction ? actionsButton.singleAction.text : i18n("More actions")
+                PC3.ToolTip.visible: actionsButton.hovered || actionsButton.pressed
+                PC3.ToolTip.delay: 700
+
                 PC2.Menu {
                     id: configMenu
                     visualParent: actionsButton
@@ -140,24 +142,24 @@ Item {
                     }
                 }
             }
-            PlasmaComponents.ToolButton {
+            PC3.ToolButton {
                 icon.name: "configure"
                 visible: actionsButton.applet && actionsButton.applet.action("configure")
-                PlasmaComponents.ToolTip {
-                    text: parent.visible ? actionsButton.applet.action("configure").text : ""
-                }
+                PC3.ToolTip.text: parent.visible ? actionsButton.applet.action("configure").text : ""
+                PC3.ToolTip.visible: hovered || pressed
+                PC3.ToolTip.delay: 700
                 onClicked: actionsButton.applet.action("configure").trigger();
             }
 
-            PlasmaComponents.ToolButton {
+            PC3.ToolButton {
                 id: pinButton
                 checkable: true
                 checked: plasmoid.configuration.pin
                 onToggled: plasmoid.configuration.pin = checked
                 icon.name: "window-pin"
-                PlasmaComponents.ToolTip {
-                    text: i18n("Keep Open")
-                }
+                PC3.ToolTip.text: i18n("Keep Open")
+                PC3.ToolTip.visible: hovered || pressed
+                PC3.ToolTip.delay: 700
             }
         }
 
