@@ -39,6 +39,7 @@ MouseArea {
             cellWidth: Math.floor(hiddenTasks.width / hiddenTasks.columns)
             cellHeight: Math.floor(hiddenTasks.height / hiddenTasks.rows)
 
+            activeFocusOnTab: true
             currentIndex: -1
             highlight: PlasmaComponents.Highlight {}
             highlightMoveDuration: 0
@@ -55,6 +56,11 @@ MouseArea {
                 }
             }
             delegate: ItemLoader {}
+            onActiveFocusChanged: if (activeFocus && currentIndex === -1) {
+                currentIndex = 0
+            } else if (!activeFocus && currentIndex >= 0) {
+                currentIndex = -1
+            }
         }
     }
 }
