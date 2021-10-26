@@ -796,6 +796,25 @@ void PanelView::moveEvent(QMoveEvent *ev)
     PlasmaQuick::ContainmentView::moveEvent(ev);
 }
 
+void PanelView::keyPressEvent(QKeyEvent *event)
+{
+    // Catch arrows keyPress to have same behavior as tab/backtab
+    if ((event->key() == Qt::Key_Right && qApp->layoutDirection() == Qt::LeftToRight)
+        || (event->key() == Qt::Key_Left && qApp->layoutDirection() != Qt::LeftToRight) || event->key() == Qt::Key_Down) {
+        event->accept();
+        auto tabEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_Tab, Qt::NoModifier);
+        qApp->sendEvent((QObject *)this, (QEvent *)tabEvent);
+        return;
+    } else if ((event->key() == Qt::Key_Right && qApp->layoutDirection() != Qt::LeftToRight)
+               || (event->key() == Qt::Key_Left && qApp->layoutDirection() == Qt::LeftToRight) || event->key() == Qt::Key_Up) {
+        event->accept();
+        auto backtabEvent = new QKeyEvent(QEvent::KeyPress, Qt::Key_Backtab, Qt::NoModifier);
+        qApp->sendEvent((QObject *)this, (QEvent *)backtabEvent);
+        return;
+    }
+    PlasmaQuick::ContainmentView::keyPressEvent(event);
+}
+
 void PanelView::integrateScreen()
 {
     updateMask();
