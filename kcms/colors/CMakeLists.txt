@@ -36,7 +36,7 @@ target_link_libraries(kcm_colors
     krdb
 )
 
-if(X11_FOUND)
+if(HAVE_X11)
     target_link_libraries(kcm_colors X11::X11 Qt::X11Extras)
 endif()
 

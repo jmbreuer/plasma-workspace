@@ -1,7 +1,7 @@
 # KI18N Translation Domain for this library
 add_definitions(-DTRANSLATION_DOMAIN=\"kcm_lookandfeel\")
 
-if(X11_Xcursor_FOUND)
+if(HAVE_X11)
     set(HAVE_XCURSOR TRUE)
 endif()
 
@@ -19,7 +19,7 @@ set(kcm_lookandfeel_SRCS
     ../kcms-common.cpp
 )
 
-if (X11_Xcursor_FOUND)
+if (HAVE_X11)
     set(kcm_lookandfeel_SRCS
         ${kcm_lookandfeel_SRCS}
         ../cursortheme/xcursor/cursortheme.cpp
@@ -53,15 +53,9 @@ target_link_libraries(kcm_lookandfeel_static
     krdb
     PlasmaAutostart
 )
-if(X11_FOUND)
-    target_link_libraries(kcm_lookandfeel_static Qt::X11Extras)
+if(HAVE_X11)
+    target_link_libraries(kcm_lookandfeel_static Qt::X11Extras X11::Xcursor X11::Xfixes)
 endif()
-if (X11_Xcursor_FOUND)
-   target_link_libraries(kcm_lookandfeel_static X11::Xcursor)
-endif ()
-if (X11_Xfixes_FOUND)
-   target_link_libraries(kcm_lookandfeel_static X11::Xfixes)
-endif ()
 
 kcoreaddons_add_plugin(kcm_lookandfeel SOURCES kcmmain.cpp INSTALL_NAMESPACE "kcms")
 kcoreaddons_desktop_to_json(kcm_lookandfeel "kcm_lookandfeel.desktop" SERVICE_TYPES kcmodule.desktop)

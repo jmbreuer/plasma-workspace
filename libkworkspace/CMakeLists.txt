@@ -58,10 +58,7 @@ target_include_directories(kworkspace PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_
 
 configure_file(config-libkworkspace.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-libkworkspace.h)
 
-if(X11_FOUND)
-    if(NOT X11_Xau_FOUND)
-        message(FATAL_ERROR "Found X11, but not libXau which is required for building kworkspace")
-    endif()
+if(HAVE_X11)
     target_link_libraries(kworkspace PRIVATE Qt::X11Extras X11::Xau)
 endif()
 

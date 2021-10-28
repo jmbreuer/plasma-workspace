@@ -9,6 +9,7 @@ set(KF5_MIN_VERSION "5.86")
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
 set(INSTALL_SDDM_THEME TRUE)
 option(INSTALL_SDDM_WAYLAND_SESSION OFF)
+option(WITH_X11 "Build with X11 support. Building without is experimental" ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -107,12 +108,18 @@ set_package_properties(Fontconfig PROPERTIES DESCRIPTION "Font access configurat
                        PURPOSE "Needed to build font configuration and installation tools"
                       )
 
-
-find_package(X11)
-set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
-                        URL "https://www.x.org"
-                        TYPE OPTIONAL
-                        PURPOSE "Required for building the X11 based workspace")
+if(WITH_X11)
+    find_package(X11 REQUIRED)
+    find_package(XCB MODULE REQUIRED COMPONENTS XCB RANDR IMAGE)
+    find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS X11Extras)
+    set(HAVE_X11 1)
+    set(HAVE_XCURSOR 1)
+    set(HAVE_XFIXES 1)
+else()
+    set(HAVE_X11 0)
+    set(HAVE_XCURSOR 0)
+    set(HAVE_XFIXES 0)
+endif()
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3)
@@ -131,20 +138,6 @@ find_package(Wayland REQUIRED COMPONENTS Client)
 if(FONTCONFIG_FOUND)
   # kfontinst
   find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS PrintSupport)
-endif()
-
-if(X11_FOUND)
-  find_package(XCB MODULE REQUIRED COMPONENTS XCB RANDR IMAGE)
-  set_package_properties(XCB PROPERTIES TYPE REQUIRED)
-  if(NOT X11_SM_FOUND)
-    message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.\nPlease install libSM.\n")
-  endif(NOT X11_SM_FOUND)
-
-  find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS X11Extras)
-endif()
-
-if(X11_FOUND AND XCB_XCB_FOUND)
-  set(HAVE_X11 1)
 endif()
 
 find_package(AppStreamQt 0.10.6)

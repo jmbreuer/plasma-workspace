@@ -46,7 +46,7 @@ target_link_libraries(libklipper_common_static
     KF5::XmlGui
     ${ZLIB_LIBRARY}
     systemclipboard)
-if (X11_FOUND)
+if (HAVE_X11)
     target_link_libraries(libklipper_common_static XCB::XCB Qt::X11Extras)
 endif()
 
@@ -83,7 +83,7 @@ target_link_libraries(plasma_engine_clipboard
     ${ZLIB_LIBRARY}
     systemclipboard
 )
-if (X11_FOUND)
+if (HAVE_X11)
   target_link_libraries(plasma_engine_clipboard XCB::XCB Qt::X11Extras)
 endif()
 install(FILES plasma-dataengine-clipboard.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})

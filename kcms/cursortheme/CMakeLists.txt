@@ -47,11 +47,8 @@ target_link_libraries(kcm_cursortheme
     krdb
 )
 
-if (X11_Xcursor_FOUND)
-   target_link_libraries(kcm_cursortheme X11::Xcursor)
-endif ()
-if (X11_Xfixes_FOUND)
-   target_link_libraries(kcm_cursortheme X11::Xfixes)
+if (HAVE_X11)
+   target_link_libraries(kcm_cursortheme X11::Xcursor X11::Xfixes)
 endif ()
 
 kcoreaddons_desktop_to_json(kcm_cursortheme "kcm_cursortheme.desktop")
@@ -79,15 +76,10 @@ target_link_libraries(plasma-apply-cursortheme
     KF5::I18n
     KF5::KCMUtils
     KF5::WindowSystem
-    X11::X11
-    XCB::XCB
     PW::KWorkspace
 )
-if (X11_Xcursor_FOUND)
-   target_link_libraries(plasma-apply-cursortheme X11::Xcursor)
-endif ()
-if (X11_Xfixes_FOUND)
-   target_link_libraries(plasma-apply-cursortheme X11::Xfixes)
+if (HAVE_X11)
+   target_link_libraries(plasma-apply-cursortheme X11::X11 XCB::XCB X11::Xcursor X11::Xfixes)
 endif ()
 
 install(TARGETS plasma-apply-cursortheme  DESTINATION ${KDE_INSTALL_BINDIR})
