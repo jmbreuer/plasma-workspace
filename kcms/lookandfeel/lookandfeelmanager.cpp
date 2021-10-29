@@ -132,15 +132,10 @@ void LookAndFeelManager::setColors(const QString &scheme, const QString &colorFi
     KConfig configDefault(configDefaults(QStringLiteral("kdeglobals")));
     auto kdeGlobalsCfg = KSharedConfig::openConfig(QStringLiteral("kdeglobals"), KConfig::FullConfig);
 
-    auto set = [kdeGlobalsCfg]() {
-        kdeGlobalsCfg->group("General").writeEntry("AccentColor", QColor());
-        kdeGlobalsCfg->group("General").deleteEntry("AccentColor", KConfig::Notify);
-    };
-
-    set();
     writeNewDefaults(*kdeGlobalsCfg, configDefault, QStringLiteral("General"), QStringLiteral("ColorScheme"), scheme, KConfig::Notify);
-    applyScheme(colorFile, kdeGlobalsCfg.data(), KConfig::Notify);
-    set();
+    if (m_mode == Mode::Apply) {
+        applyScheme(colorFile, kdeGlobalsCfg.data(), KConfig::Notify);
+    }
 
     Q_EMIT colorsChanged();
 }
@@ -230,8 +225,10 @@ void LookAndFeelManager::writeNewDefaults(KConfigGroup &cg, KConfigGroup &cgd, c
     }
     cgd.sync();
 
-    cg.revertToDefault(key, writeFlags);
-    cg.sync();
+    if (m_mode == Mode::Apply) {
+        cg.revertToDefault(key, writeFlags);
+        cg.sync();
+    }
 }
 
 KConfig LookAndFeelManager::configDefaults(const QString &filename)
@@ -241,7 +238,7 @@ KConfig LookAndFeelManager::configDefaults(const QString &filename)
 
 void LookAndFeelManager::save(const KPackage::Package &package, const KPackage::Package &previousPackage)
 {
-    if (m_resetDefaultLayout) {
+    if (m_resetDefaultLayout && m_mode == Mode::Apply) {
         QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
                                                               QStringLiteral("/PlasmaShell"),
                                                               QStringLiteral("org.kde.PlasmaShell"),
@@ -366,6 +363,13 @@ void LookAndFeelManager::save(const KPackage::Package &package, const KPackage::
 #endif
         }
 
+        setSplashScreen(m_data->settings()->lookAndFeelPackage());
+        setLockScreen(m_data->settings()->lookAndFeelPackage());
+
+        if (m_mode == Mode::Defaults) {
+            return;
+        }
+
         // Reload KWin if something changed, but only once.
         if (m_applyWindowSwitcher || m_applyDesktopSwitcher || m_applyWindowDecoration || m_applyWindowPlacement) {
             QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"));
@@ -418,9 +422,6 @@ void LookAndFeelManager::save(const KPackage::Package &package, const KPackage::
             Q_EMIT refreshServices(toStop, toStart);
         }
     }
-
-    setSplashScreen(m_data->settings()->lookAndFeelPackage());
-    setLockScreen(m_data->settings()->lookAndFeelPackage());
 }
 
 void LookAndFeelManager::setCursorTheme(const QString themeName)
