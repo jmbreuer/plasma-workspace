@@ -366,6 +366,10 @@ void LookAndFeelManager::save(const KPackage::Package &package, const KPackage::
         setSplashScreen(m_data->settings()->lookAndFeelPackage());
         setLockScreen(m_data->settings()->lookAndFeelPackage());
 
+        QFile packageFile(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1String("/kdedefaults/package"));
+        packageFile.open(QIODevice::WriteOnly);
+        packageFile.write(m_data->settings()->lookAndFeelPackage().toUtf8());
+
         if (m_mode == Mode::Defaults) {
             return;
         }

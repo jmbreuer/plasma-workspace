@@ -31,6 +31,7 @@ target_link_libraries(startplasma-x11 PRIVATE
     KF5::Notifications
     PW::KWorkspace
     X11::X11 # for kcheckrunning
+    lookandfeelmanager
     ${PHONON_LIBRARIES}
 )
 
@@ -40,6 +41,7 @@ target_link_libraries(startplasma-wayland PRIVATE
     KF5::ConfigCore
     KF5::Notifications
     PW::KWorkspace
+    lookandfeelmanager
     ${PHONON_LIBRARIES}
 )
 
